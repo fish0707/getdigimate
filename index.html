@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>數伴 DigiMate · 讓你的小店用上大公司的數位工具</title>
+  <style>
+    /* ── Variables ── */
+    :root {
+      --navy:    #0f2540;
+      --blue:    #1d4ed8;
+      --blue-lt: #3b82f6;
+      --sky:     #dbeafe;
+      --amber:   #f59e0b;
+      --amber-lt:#fef3c7;
+      --green:   #059669;
+      --green-lt:#d1fae5;
+      --red-lt:  #fee2e2;
+      --red:     #dc2626;
+      --gray50:  #f8fafc;
+      --gray100: #f1f5f9;
+      --gray200: #e2e8f0;
+      --gray400: #94a3b8;
+      --gray500: #64748b;
+      --gray700: #334155;
+      --gray900: #0f172a;
+      --white:   #ffffff;
+      --radius:  14px;
+      --shadow:  0 4px 24px rgba(0,0,0,.08);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                   'PingFang TC', 'Noto Sans TC', '微軟正黑體', sans-serif;
+      background: var(--white);
+      color: var(--gray900);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gray200);
+      height: 64px; display: flex; align-items: center;
+      padding: 0 2rem;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: .5rem; text-decoration: none; }
+    .logo-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1rem; font-weight: 900;
+    }
+    .logo-text { font-size: 1.1rem; font-weight: 800; color: var(--navy); }
+    .logo-text span { color: var(--blue); }
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--gray500);
+      font-size: .9rem; font-weight: 500; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--navy); }
+    .nav-cta {
+      background: var(--blue); color: #fff; border: none;
+      padding: .55rem 1.3rem; border-radius: 8px;
+      font-size: .875rem; font-weight: 700; cursor: pointer;
+      transition: background .2s, transform .15s;
+      text-decoration: none; display: inline-block;
+    }
+    .nav-cta:hover { background: var(--navy); transform: translateY(-1px); }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0f2540 0%, #1e3a6e 60%, #1d4ed8 100%);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 2rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%,
+                  rgba(59,130,246,.18) 0%, transparent 70%);
+    }
+    #hero::after {
+      content: '';
+      position: absolute; bottom: -2px; left: 0; right: 0; height: 80px;
+      background: var(--white);
+      clip-path: ellipse(60% 100% at 50% 100%);
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 760px; }
+    .hero-pill {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      color: #bfdbfe; font-size: .8rem; font-weight: 600;
+      padding: .35rem 1rem; border-radius: 999px; margin-bottom: 1.75rem;
+    }
+    .hero-pill::before { content: '●'; font-size: .45rem; color: #4ade80; }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900; color: #fff; line-height: 1.12;
+      margin-bottom: 1.25rem; letter-spacing: -.02em;
+    }
+    h1 .highlight {
+      color: transparent;
+      background: linear-gradient(90deg, #60a5fa, #34d399);
+      -webkit-background-clip: text; background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: #93c5fd; margin-bottom: 2.25rem; line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-hero {
+      background: var(--amber); color: var(--navy);
+      padding: .9rem 2rem; border-radius: 10px;
+      font-size: 1rem; font-weight: 800; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 4px 20px rgba(245,158,11,.4);
+    }
+    .btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(245,158,11,.5); }
+    .btn-ghost {
+      background: rgba(255,255,255,.1); color: #e0f2fe;
+      border: 1px solid rgba(255,255,255,.25);
+      padding: .9rem 2rem; border-radius: 10px;
+      font-size: 1rem; font-weight: 700; text-decoration: none;
+      transition: background .2s;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.18); }
+
+    /* trust strip */
+    .trust-strip {
+      display: flex; gap: 2.5rem; justify-content: center; margin-top: 3rem;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: .4rem;
+      color: #bfdbfe; font-size: .85rem;
+    }
+    .trust-item strong { color: #e0f2fe; }
+
+    /* ── Section shared ── */
+    .section { padding: 5rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: var(--sky); color: var(--blue);
+      font-size: .7rem; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; padding: .3rem .8rem; border-radius: 999px;
+      margin-bottom: .9rem;
+    }
+    h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+      font-weight: 900; color: var(--navy); line-height: 1.2;
+      margin-bottom: .75rem; letter-spacing: -.02em;
+    }
+    .lead {
+      font-size: 1.05rem; color: var(--gray500); max-width: 600px;
+      margin-bottom: 3rem; line-height: 1.75;
+    }
+
+    /* ── Pain Points ── */
+    #pain { background: var(--gray50); }
+    .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; }
+    .pain-card {
+      background: var(--white); border-radius: var(--radius); padding: 1.5rem;
+      border: 1px solid var(--gray200);
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .pain-emoji { font-size: 2rem; }
+    .pain-title { font-size: 1rem; font-weight: 800; color: var(--navy); }
+    .pain-desc { font-size: .875rem; color: var(--gray500); }
+    .pain-arrow {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .8rem; font-weight: 700; color: var(--blue); margin-top: .25rem;
+    }
+    .pain-arrow::before { content: '→'; }
+
+    /* ── How it works ── */
+    #how { background: var(--white); }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .step {
+      text-align: center; padding: 2rem 1.5rem;
+      background: var(--gray50); border-radius: var(--radius);
+      border: 1px solid var(--gray200); position: relative;
+    }
+    .step-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; font-weight: 900; margin: 0 auto 1rem;
+    }
+    .step-title { font-size: 1.05rem; font-weight: 800; color: var(--navy); margin-bottom: .5rem; }
+    .step-desc { font-size: .875rem; color: var(--gray500); }
+
+    /* connector arrows */
+    .steps-wrapper { position: relative; }
+    .step-connector {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 1.5rem; color: var(--gray200); z-index: 1;
+    }
+
+    /* ── Services ── */
+    #services { background: var(--gray50); }
+    .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .service-card {
+      background: var(--white); border-radius: var(--radius); padding: 2rem;
+      border: 1px solid var(--gray200);
+      transition: transform .2s, box-shadow .2s; cursor: default;
+    }
+    .service-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    .service-card.featured {
+      border: 2px solid var(--blue);
+      background: linear-gradient(160deg, #f0f7ff 0%, #fff 100%);
+    }
+    .service-tag {
+      display: inline-block; background: var(--sky); color: var(--blue);
+      font-size: .7rem; font-weight: 700; padding: .2rem .7rem;
+      border-radius: 999px; margin-bottom: 1rem; text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .service-card.featured .service-tag { background: var(--blue); color: #fff; }
+    .service-icon { font-size: 2.2rem; margin-bottom: .75rem; }
+    .service-name { font-size: 1.15rem; font-weight: 800; color: var(--navy); margin-bottom: .4rem; }
+    .service-customer-line {
+      font-size: .875rem; color: var(--gray500); margin-bottom: 1rem;
+      font-style: italic;
+    }
+    .service-price { font-size: 1.5rem; font-weight: 900; color: var(--blue); }
+    .service-price-sub { font-size: .8rem; color: var(--gray400); margin-bottom: 1rem; }
+    .service-features { list-style: none; }
+    .service-features li {
+      font-size: .85rem; color: var(--gray700); padding: .3rem 0;
+      display: flex; gap: .5rem; align-items: center;
+    }
+    .service-features li::before { content: '✓'; color: var(--green); font-weight: 800; flex-shrink: 0; }
+
+    /* ── Mock Cases ── */
+    #cases { background: var(--white); }
+    .cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .case-card {
+      border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--gray200);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .case-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .case-header {
+      padding: 1.5rem 1.5rem 1rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .case-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
+    }
+    .case-biz { font-size: .75rem; color: var(--gray400); font-weight: 600; }
+    .case-name { font-size: 1rem; font-weight: 800; color: var(--navy); }
+    .case-body { padding: 0 1.5rem 1.5rem; }
+    .case-before-after {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1rem;
+    }
+    .ba-box { border-radius: 10px; padding: 1rem; }
+    .ba-box.before { background: var(--red-lt); }
+    .ba-box.after  { background: var(--green-lt); }
+    .ba-label { font-size: .65rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .35rem; }
+    .ba-box.before .ba-label { color: var(--red); }
+    .ba-box.after  .ba-label { color: var(--green); }
+    .ba-text { font-size: .8rem; color: var(--gray700); line-height: 1.5; }
+    .case-result {
+      background: var(--amber-lt); border-radius: 8px;
+      padding: .75rem 1rem;
+      font-size: .875rem; color: var(--gray700); font-weight: 600;
+    }
+    .case-result span { color: var(--amber); font-weight: 900; }
+    .case-disclaimer {
+      text-align: center; font-size: .75rem; color: var(--gray400);
+      margin-top: 1.5rem;
+    }
+
+    /* ── Pricing ── */
+    #pricing { background: var(--gray50); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .pricing-card {
+      background: var(--white); border-radius: var(--radius); padding: 2rem;
+      border: 1px solid var(--gray200); text-align: center;
+      transition: transform .2s;
+    }
+    .pricing-card:hover { transform: translateY(-4px); }
+    .pricing-card.popular {
+      border: 2px solid var(--blue); position: relative;
+      background: linear-gradient(160deg, #eff6ff, #fff);
+    }
+    .popular-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--blue); color: #fff;
+      font-size: .7rem; font-weight: 800; padding: .25rem .9rem;
+      border-radius: 999px; white-space: nowrap;
+    }
+    .plan-name { font-size: .85rem; font-weight: 700; color: var(--gray400);
+      text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem; }
+    .plan-price { font-size: 2.2rem; font-weight: 900; color: var(--navy); }
+    .plan-sub { font-size: .8rem; color: var(--gray400); margin-bottom: 1.5rem; }
+    .plan-features { list-style: none; text-align: left; margin-bottom: 1.5rem; }
+    .plan-features li {
+      font-size: .875rem; color: var(--gray700); padding: .4rem 0;
+      border-bottom: 1px solid var(--gray100);
+      display: flex; gap: .5rem; align-items: flex-start;
+    }
+    .plan-features li::before { content: '✓'; color: var(--green); font-weight: 800; flex-shrink: 0; }
+    .plan-cta {
+      display: block; text-align: center; text-decoration: none;
+      background: var(--gray100); color: var(--navy);
+      border-radius: 8px; padding: .7rem; font-size: .875rem;
+      font-weight: 700; transition: background .2s;
+    }
+    .plan-cta:hover { background: var(--gray200); }
+    .pricing-card.popular .plan-cta {
+      background: var(--blue); color: #fff;
+    }
+    .pricing-card.popular .plan-cta:hover { background: var(--navy); }
+
+    /* ── FAQ ── */
+    #faq { background: var(--white); }
+    .faq-list { max-width: 720px; }
+    .faq-item {
+      border-bottom: 1px solid var(--gray200); padding: 1.25rem 0;
+      cursor: pointer;
+    }
+    .faq-q {
+      font-size: .975rem; font-weight: 700; color: var(--navy);
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem;
+    }
+    .faq-icon { font-size: 1.2rem; color: var(--blue); flex-shrink: 0;
+      transition: transform .3s; }
+    .faq-a {
+      font-size: .875rem; color: var(--gray500); margin-top: .75rem;
+      line-height: 1.7; display: none;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── Form ── */
+    #contact {
+      background: linear-gradient(160deg, #0f2540 0%, #1e3a6e 100%);
+      padding: 6rem 2rem;
+    }
+    .contact-inner {
+      max-width: 640px; margin: 0 auto; text-align: center;
+    }
+    #contact h2 { color: #fff; }
+    #contact .lead { color: #93c5fd; margin-left: auto; margin-right: auto; }
+    .form-card {
+      background: var(--white); border-radius: 20px;
+      padding: 2.5rem; margin-top: 2.5rem;
+      text-align: left; box-shadow: var(--shadow-lg);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    .form-group label {
+      display: block; font-size: .85rem; font-weight: 700;
+      color: var(--gray700); margin-bottom: .4rem;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: .75rem 1rem; border-radius: 8px;
+      border: 1.5px solid var(--gray200); font-size: .9rem;
+      color: var(--gray900); background: var(--gray50);
+      transition: border-color .2s; font-family: inherit;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--blue); background: var(--white);
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-submit {
+      width: 100%; background: var(--blue); color: #fff;
+      border: none; border-radius: 10px; padding: 1rem;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      transition: background .2s, transform .15s;
+      margin-top: .5rem;
+    }
+    .form-submit:hover { background: var(--navy); transform: translateY(-1px); }
+    .form-note {
+      text-align: center; font-size: .78rem; color: var(--gray400);
+      margin-top: .75rem;
+    }
+    /* Success state */
+    .form-success {
+      display: none; text-align: center; padding: 2rem;
+    }
+    .form-success .success-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .form-success h3 { font-size: 1.3rem; font-weight: 800; color: var(--navy); margin-bottom: .5rem; }
+    .form-success p { font-size: .9rem; color: var(--gray500); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--navy); color: #64748b;
+      padding: 2.5rem 2rem; text-align: center;
+    }
+    footer .f-logo { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: .5rem; }
+    footer p { font-size: .8rem; }
+    footer a { color: #93c5fd; text-decoration: none; }
+
+    /* ── Scroll fade ── */
+    .reveal { opacity: 0; transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .steps { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .case-before-after { grid-template-columns: 1fr; }
+      h1 { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">數</div>
+      <div class="logo-text">數伴 <span>DigiMate</span></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#pain">你的煩惱</a></li>
+      <li><a href="#services">服務項目</a></li>
+      <li><a href="#cases">成功案例</a></li>
+      <li><a href="#pricing">收費方式</a></li>
+      <li><a href="#faq">常見問題</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">免費諮詢 →</a>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section id="hero">
+  <div class="hero-content">
+    <div class="hero-pill">AI 加速 × 小公司專屬 × 快速上線</div>
+    <h1>
+      你還在用 LINE<br>
+      <span class="highlight">管理客戶和預約？</span>
+    </h1>
+    <p class="hero-sub">
+      我們用 AI 工具幫台灣小業主打造專屬數位系統，<br>
+      費用是大公司的 1/5，速度快 3 倍，全程一對一服務。
+    </p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-hero">免費填寫需求諮詢 →</a>
+      <a href="#cases" class="btn-ghost">看成功案例</a>
+    </div>
+    <div class="trust-strip">
+      <div class="trust-item"><strong>✓</strong> 無需技術背景</div>
+      <div class="trust-item"><strong>✓</strong> 交付含教學影片</div>
+      <div class="trust-item"><strong>✓</strong> 1個月免費修正</div>
+      <div class="trust-item"><strong>✓</strong> 台灣在地服務</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pain Points ── -->
+<section id="pain" class="section">
+  <div class="section-inner">
+    <div class="section-tag">你也有這些困擾嗎？</div>
+    <h2>很多小業主<br>每天都在解決這些問題</h2>
+    <p class="lead">如果你有以下任一個困擾，你就需要一個屬於自己的數位系統。</p>
+    <div class="pain-grid reveal">
+      <div class="pain-card">
+        <div class="pain-emoji">📱</div>
+        <div class="pain-title">客戶資料散落在 LINE</div>
+        <div class="pain-desc">訂單在 LINE、電話筆記在手機、記憶在腦袋，根本找不到上次誰買了什麼。</div>
+        <div class="pain-arrow">客戶管理系統解決</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-emoji">📅</div>
+        <div class="pain-title">預約全靠手動確認</div>
+        <div class="pain-desc">每天都在回「可以，那天有空」，漏掉預約、撞時間是家常便飯，超級累。</div>
+        <div class="pain-arrow">線上預約系統解決</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-emoji">🌐</div>
+        <div class="pain-title">只有 IG，沒有官網</div>
+        <div class="pain-desc">客戶問你有沒有網站，你只能傳 IG 連結，看起來不夠專業，流失很多訂單。</div>
+        <div class="pain-arrow">品牌官網解決</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-emoji">😤</div>
+        <div class="pain-title">想做系統但價格嚇到</div>
+        <div class="pain-desc">找過外包公司，報價 10 萬起跳；用 SaaS 平台，功能又受限、月費越繳越多。</div>
+        <div class="pain-arrow">我們的服務解決</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How it works ── -->
+<section id="how" class="section" style="background:var(--white);">
+  <div class="section-inner">
+    <div class="section-tag">合作流程</div>
+    <h2>三步驟，輕鬆完成<br>你的數位系統</h2>
+    <p class="lead">你不需要懂任何技術，只需要告訴我你的需求，其餘交給我。</p>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">免費需求訪談</div>
+        <div class="step-desc">填寫表單後，我會在 24 小時內聯繫你。線上或電話各約 30 分鐘，聊聊你的痛點和需求。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">AI 加速開發</div>
+        <div class="step-desc">確認方案後，AI 工具加速，一般只需 1–3 週。每週同步進度，你全程看得到。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">上線 + 教你用</div>
+        <div class="step-desc">系統上線後，我會錄製專屬教學影片，附上操作文件，確保你自己也能輕鬆管理。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Services ── -->
+<section id="services" class="section">
+  <div class="section-inner">
+    <div class="section-tag">服務項目</div>
+    <h2>你需要的，<br>我們都能做</h2>
+    <p class="lead">五大服務，針對台灣小業主最常見的數位化需求量身打造。</p>
+    <div class="service-grid reveal">
+      <div class="service-card">
+        <div class="service-tag">最快上線</div>
+        <div class="service-icon">🌐</div>
+        <div class="service-name">品牌一頁式官網</div>
+        <div class="service-customer-line">「我想讓客人找到我，看起來很專業」</div>
+        <div class="service-price">NT$15,000 起</div>
+        <div class="service-price-sub">⏱ 1 週內完成</div>
+        <ul class="service-features">
+          <li>品牌形象設計</li>
+          <li>手機版完整適配</li>
+          <li>Google 搜尋優化</li>
+          <li>聯絡表單整合</li>
+        </ul>
+      </div>
+      <div class="service-card featured">
+        <div class="service-tag">最多人選</div>
+        <div class="service-icon">📅</div>
+        <div class="service-name">線上預約系統</div>
+        <div class="service-customer-line">「我每天花太多時間手動確認預約了」</div>
+        <div class="service-price">NT$30,000 起</div>
+        <div class="service-price-sub">⏱ 2 週完成</div>
+        <ul class="service-features">
+          <li>客戶自助線上預約</li>
+          <li>自動發送確認通知</li>
+          <li>行事曆同步管理</li>
+          <li>預約記錄一覽</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-tag">高 CP 值</div>
+        <div class="service-icon">📊</div>
+        <div class="service-name">客戶管理系統</div>
+        <div class="service-customer-line">「我想知道每個客人買過什麼、來過幾次」</div>
+        <div class="service-price">NT$40,000 起</div>
+        <div class="service-price-sub">⏱ 2–3 週完成</div>
+        <ul class="service-features">
+          <li>客戶資料集中管理</li>
+          <li>消費記錄一鍵查詢</li>
+          <li>自動生日提醒</li>
+          <li>簡單數據報表</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🖥️</div>
+        <div class="service-name">多頁官網 + 後台</div>
+        <div class="service-customer-line">「我需要一個完整官網，自己能更新內容」</div>
+        <div class="service-price">NT$30,000 起</div>
+        <div class="service-price-sub">⏱ 2–3 週完成</div>
+        <ul class="service-features">
+          <li>多頁面企業網站</li>
+          <li>自助內容管理後台</li>
+          <li>部落格 / 活動頁面</li>
+          <li>SEO 基礎優化</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔧</div>
+        <div class="service-name">客訴與工單系統</div>
+        <div class="service-customer-line">「客訴和問題回報搞得我很混亂」</div>
+        <div class="service-price">NT$40,000 起</div>
+        <div class="service-price-sub">⏱ 2–3 週完成</div>
+        <ul class="service-features">
+          <li>統一收集客訴問題</li>
+          <li>狀態追蹤不漏接</li>
+          <li>自動回覆確認信</li>
+          <li>處理進度報表</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Cases ── -->
+<section id="cases" class="section" style="background:var(--white);">
+  <div class="section-inner">
+    <div class="section-tag">成功案例</div>
+    <h2>真實業主，<br>真實改變</h2>
+    <p class="lead">看看和你同類型的業主，上線後有什麼不同。</p>
+    <div class="cases-grid reveal">
+      <!-- Case 1 -->
+      <div class="case-card">
+        <div class="case-header">
+          <div class="case-icon" style="background:#fef3c7;">☕</div>
+          <div>
+            <div class="case-biz">台北 · 精品咖啡廳</div>
+            <div class="case-name">品牌官網 + 線上預約</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-before-after">
+            <div class="ba-box before">
+              <div class="ba-label">以前</div>
+              <div class="ba-text">只有 IG，預約全靠私訊，每天早上要花一小時整理留言</div>
+            </div>
+            <div class="ba-box after">
+              <div class="ba-label">現在</div>
+              <div class="ba-text">官網上線，客人自己預約，早上直接看行事曆開始工作</div>
+            </div>
+          </div>
+          <div class="case-result">每週節省 <span>7+ 小時</span>手動確認時間</div>
+        </div>
+      </div>
+      <!-- Case 2 -->
+      <div class="case-card">
+        <div class="case-header">
+          <div class="case-icon" style="background:#fce7f3;">💆</div>
+          <div>
+            <div class="case-biz">高雄 · 美睫工作室</div>
+            <div class="case-name">預約系統 + 客戶管理</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-before-after">
+            <div class="ba-box before">
+              <div class="ba-label">以前</div>
+              <div class="ba-text">記事本記預約，常常撞時間，客戶等待投訴增加</div>
+            </div>
+            <div class="ba-box after">
+              <div class="ba-label">現在</div>
+              <div class="ba-text">線上預約自動擋重複，客戶提前收到提醒，爽約減少</div>
+            </div>
+          </div>
+          <div class="case-result">爽約率降低 <span>60%</span>，回客率提升</div>
+        </div>
+      </div>
+      <!-- Case 3 -->
+      <div class="case-card">
+        <div class="case-header">
+          <div class="case-icon" style="background:#dbeafe;">🎓</div>
+          <div>
+            <div class="case-biz">台中 · 個人品牌講師</div>
+            <div class="case-name">個人品牌官網 + 課程頁</div>
+          </div>
+        </div>
+        <div class="case-body">
+          <div class="case-before-after">
+            <div class="ba-box before">
+              <div class="ba-label">以前</div>
+              <div class="ba-text">只能貼 PowerPoint，合作提案很難說服對方，很多機會沒談成</div>
+            </div>
+            <div class="ba-box after">
+              <div class="ba-label">現在</div>
+              <div class="ba-text">專業網站呈現所有課程，媒體採訪找上門，身價感提升</div>
+            </div>
+          </div>
+          <div class="case-result">談成合作案件 <span>3倍</span>提升，講課單價提高</div>
+        </div>
+      </div>
+    </div>
+    <p class="case-disclaimer">＊ 以上為模擬案例，依據業主常見需求情境呈現，實際成效因業主狀況而異。</p>
+  </div>
+</section>
+
+<!-- ── Pricing ── -->
+<section id="pricing" class="section">
+  <div class="section-inner">
+    <div class="section-tag">收費方式</div>
+    <h2>透明定價，<br>沒有隱藏費用</h2>
+    <p class="lead">一次性開發費用 + 選配月費維護，你決定需要什麼，不強迫加購。</p>
+    <div class="pricing-grid reveal">
+      <div class="pricing-card">
+        <div class="plan-name">基礎方案</div>
+        <div class="plan-price">NT$15K</div>
+        <div class="plan-sub">一頁式官網起</div>
+        <ul class="plan-features">
+          <li>品牌形象頁面設計</li>
+          <li>手機版完整適配</li>
+          <li>交付含教學影片</li>
+          <li>1 個月免費 Bug 修正</li>
+        </ul>
+        <a href="#contact" class="plan-cta">免費諮詢</a>
+      </div>
+      <div class="pricing-card popular">
+        <div class="popular-badge">⭐ 最多人選</div>
+        <div class="plan-name">標準方案</div>
+        <div class="plan-price">NT$30K</div>
+        <div class="plan-sub">官網 or 預約系統起</div>
+        <ul class="plan-features">
+          <li>完整功能系統開發</li>
+          <li>後台管理介面</li>
+          <li>交付含教學影片</li>
+          <li>1 個月免費 Bug 修正</li>
+          <li>上線後 14 天免費微調</li>
+        </ul>
+        <a href="#contact" class="plan-cta">免費諮詢</a>
+      </div>
+      <div class="pricing-card">
+        <div class="plan-name">進階方案</div>
+        <div class="plan-price">NT$40K+</div>
+        <div class="plan-sub">CRM / 複雜系統起</div>
+        <ul class="plan-features">
+          <li>客製化系統開發</li>
+          <li>資料庫 + 後台管理</li>
+          <li>自動化流程整合</li>
+          <li>交付含教學影片</li>
+          <li>1 個月免費 Bug 修正</li>
+        </ul>
+        <a href="#contact" class="plan-cta">免費諮詢</a>
+      </div>
+    </div>
+    <div style="margin-top:2rem;background:var(--sky);border-radius:var(--radius);padding:1.25rem 1.5rem;display:flex;gap:1rem;align-items:flex-start;">
+      <span style="font-size:1.5rem;">💡</span>
+      <div>
+        <strong style="color:var(--navy);">另提供月費維護服務（NT$1,500–6,000 / 月）</strong>
+        <p style="font-size:.875rem;color:var(--gray500);margin-top:.25rem;">包含主機管理、安全更新、內容微調等。不需要就不用選，完全自由。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq" class="section" style="background:var(--white);">
+  <div class="section-inner">
+    <div class="section-tag">常見問題</div>
+    <h2>你可能想問的問題</h2>
+    <div class="faq-list reveal">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">
+          我完全不懂技術，可以嗎？
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">完全沒問題！我的服務就是專門為不懂技術的業主設計的。你只需要告訴我你的需求，我會用白話文溝通，交付時也會錄製專屬教學影片，讓你自己就能管理。</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">
+          開發時間要多久？
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">一頁式官網約 1 週，一般系統（預約、官網）約 2–3 週，較複雜的 CRM 約 3–4 週。我使用 AI 工具加速，比傳統外包快很多。每週我會主動更新進度給你。</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">
+          費用怎麼付？
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">50% 簽約時付訂金，50% 上線完成後付尾款。絕對安全，尾款付清前你拿不到主機控制權，我也不會消失。</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">
+          上線後如果系統壞了怎麼辦？
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">上線後享有 1 個月免費 Bug 修正期。如果需要長期維護，可以選擇月費維護方案（NT$1,500 起），我會持續幫你顧。</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">
+          可以追加功能嗎？
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">可以！我們在簽約前會明確列出功能清單，追加的功能會另外報價。這是保護雙方的做法，讓你清楚每一分錢花在哪裡。</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">
+          你一個人做得來嗎？品質有保障嗎？
+          <span class="faq-icon">+</span>
+        </div>
+        <div class="faq-a">我使用最新的 AI 開發工具（Cursor、Claude 等），一個人的效率等同於小型開發團隊。同時最多接 2 個案子，保證品質和速度都顧到，不會讓你等太久或品質打折。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Contact Form ── -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-tag" style="background:rgba(255,255,255,.12);color:#93c5fd;">免費諮詢</div>
+    <h2>告訴我你的需求，<br>一起找出最適合的方案</h2>
+    <p class="lead">填寫後 24 小時內回覆，完全免費，不會強迫推銷。</p>
+    <div class="form-card">
+      <div id="form-body">
+        <div class="form-row">
+          <div class="form-group">
+            <label>你的名字 *</label>
+            <input type="text" id="fname" placeholder="王小明" />
+          </div>
+          <div class="form-group">
+            <label>聯絡電話 / LINE</label>
+            <input type="text" id="fcontact" placeholder="09xx-xxx-xxx" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>你的業務類型 *</label>
+          <select id="fbiz">
+            <option value="">請選擇</option>
+            <option>餐廳 / 咖啡廳 / 飲料店</option>
+            <option>美容 / 美髮 / 美睫工作室</option>
+            <option>顧問 / 教練 / 講師</option>
+            <option>小型零售 / 品牌電商</option>
+            <option>個人工作室 / 其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>你最大的困擾是？ *</label>
+          <select id="fpain">
+            <option value="">請選擇</option>
+            <option>客戶資料散落，管理很亂</option>
+            <option>預約手動確認，很花時間</option>
+            <option>沒有官網，看起來不專業</option>
+            <option>想建立一個完整的數位系統</option>
+            <option>其他（在下方說明）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>其他說明 / 預算範圍（選填）</label>
+          <textarea id="fmemo" placeholder="例如：我有咖啡廳，目前靠 LINE 管預約，每天要花很多時間確認，想要有個自動化的系統..."></textarea>
+        </div>
+        <button class="form-submit" onclick="submitForm()">送出免費諮詢申請 →</button>
+        <p class="form-note">📩 提交後 24 小時內，我會以 LINE 或電話與你聯繫</p>
+      </div>
+      <div class="form-success" id="form-success">
+        <div class="success-icon">🎉</div>
+        <h3>收到你的申請了！</h3>
+        <p>我會在 24 小時內聯繫你，<br>期待和你聊聊你的需求。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <div class="f-logo">數伴 DigiMate</div>
+  <p>用 AI 加速，幫台灣小業主打造負擔得起的數位系統</p>
+  <p style="margin-top:.5rem;">© 2025 數伴 DigiMate · 台灣</p>
+</footer>
+
+<script>
+  // FAQ toggle
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+  }
+
+  // Form submit (demo)
+  function submitForm() {
+    const name  = document.getElementById('fname').value.trim();
+    const biz   = document.getElementById('fbiz').value;
+    const pain  = document.getElementById('fpain').value;
+    if (!name || !biz || !pain) {
+      alert('請填寫必填欄位（姓名、業務類型、主要困擾）');
+      return;
+    }
+    document.getElementById('form-body').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+
+  // Scroll reveal
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Active nav link highlight
+  const sections = document.querySelectorAll('section[id], div[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 80) current = s.id;
+    });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current
+        ? 'var(--navy)' : '';
+      a.style.fontWeight = a.getAttribute('href') === '#' + current ? '700' : '';
+    });
+  });
+</script>
+</body>
+</html>
