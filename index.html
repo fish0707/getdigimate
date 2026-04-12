@@ -872,17 +872,44 @@
     el.classList.toggle('open');
   }
 
-  // Form submit (demo)
-  function submitForm() {
-    const name  = document.getElementById('fname').value.trim();
-    const biz   = document.getElementById('fbiz').value;
-    const pain  = document.getElementById('fpain').value;
+  // ── GAS Web App URL（部署後貼上你的網址）──
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbwitARvAIBietGvTQxT4U2BTLAiRsufhwRE9VyAFZUq8obMY9Cf9mP1jMOKVtUeKAg5_A/exec';
+
+  async function submitForm() {
+    const name    = document.getElementById('fname').value.trim();
+    const contact = document.getElementById('fcontact').value.trim();
+    const biz     = document.getElementById('fbiz').value;
+    const pain    = document.getElementById('fpain').value;
+    const memo    = document.getElementById('fmemo').value.trim();
+
     if (!name || !biz || !pain) {
       alert('請填寫必填欄位（姓名、業務類型、主要困擾）');
       return;
     }
-    document.getElementById('form-body').style.display = 'none';
-    document.getElementById('form-success').style.display = 'block';
+
+    // 按鈕 loading 狀態
+    const btn = document.querySelector('.form-submit');
+    btn.textContent = '送出中…';
+    btn.disabled = true;
+
+    try {
+      // 用 no-cors 送出（GAS 不需要 CORS 設定）
+      await fetch(GAS_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ name, contact, biz, pain, memo })
+      });
+
+      // 顯示成功畫面
+      document.getElementById('form-body').style.display    = 'none';
+      document.getElementById('form-success').style.display = 'block';
+
+    } catch (err) {
+      alert('送出失敗，請稍後再試或直接聯繫我們。');
+      btn.textContent = '送出免費諮詢申請 →';
+      btn.disabled = false;
+    }
   }
 
   // Scroll reveal
