@@ -395,6 +395,35 @@
       text-align: center; font-size: .78rem; color: var(--gray400);
       margin-top: .75rem;
     }
+    /* ── Checkbox Group ── */
+    .checkbox-group {
+      display: grid; grid-template-columns: 1fr 1fr; gap: .6rem;
+    }
+    .checkbox-item {
+      display: flex; align-items: center; gap: .6rem;
+      padding: .65rem .9rem; border-radius: 8px;
+      border: 1.5px solid var(--gray200); cursor: pointer;
+      background: var(--gray50); transition: border-color .2s, background .2s;
+      user-select: none;
+    }
+    .checkbox-item:hover { border-color: var(--blue); background: #eff6ff; }
+    .checkbox-item input[type="checkbox"] { display: none; }
+    .checkbox-box {
+      width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0;
+      border: 2px solid var(--gray200); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s, background .2s;
+    }
+    .checkbox-item input:checked ~ .checkbox-box {
+      background: var(--blue); border-color: var(--blue);
+    }
+    .checkbox-item input:checked ~ .checkbox-box::after {
+      content: '✓'; color: #fff; font-size: .7rem; font-weight: 800; line-height: 1;
+    }
+    .checkbox-item input:checked ~ .checkbox-label { color: var(--navy); font-weight: 600; }
+    .checkbox-item:has(input:checked) { border-color: var(--blue); background: #eff6ff; }
+    .checkbox-label { font-size: .85rem; color: var(--gray700); }
+    @media (max-width: 600px) { .checkbox-group { grid-template-columns: 1fr; } }
     /* Success state */
     .form-success {
       display: none; text-align: center; padding: 2rem;
@@ -833,15 +862,39 @@
           </select>
         </div>
         <div class="form-group">
-          <label>你最大的困擾是？ *</label>
-          <select id="fpain">
-            <option value="">請選擇</option>
-            <option>客戶資料散落，管理很亂</option>
-            <option>預約手動確認，很花時間</option>
-            <option>沒有官網，看起來不專業</option>
-            <option>想建立一個完整的數位系統</option>
-            <option>其他（在下方說明）</option>
-          </select>
+          <label>你目前有哪些困擾？ * <span style="font-weight:400;color:var(--gray400);">（可複選）</span></label>
+          <div class="checkbox-group" id="fpain-group">
+            <label class="checkbox-item">
+              <input type="checkbox" name="pain" value="客戶資料散落，管理很亂">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">📱 客戶資料散落，管理很亂</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="pain" value="預約手動確認，很花時間">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">📅 預約手動確認，很花時間</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="pain" value="沒有官網，看起來不專業">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">🌐 沒有官網，看起來不專業</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="pain" value="想建立完整的數位系統">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">🖥️ 想建立完整的數位系統</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="pain" value="客訴沒有統一管理">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">🔧 客訴沒有統一管理</span>
+            </label>
+            <label class="checkbox-item">
+              <input type="checkbox" name="pain" value="其他（在下方說明）">
+              <span class="checkbox-box"></span>
+              <span class="checkbox-label">✏️ 其他（在下方說明）</span>
+            </label>
+          </div>
         </div>
         <div class="form-group">
           <label>其他說明 / 預算範圍（選填）</label>
@@ -879,11 +932,12 @@
     const name    = document.getElementById('fname').value.trim();
     const contact = document.getElementById('fcontact').value.trim();
     const biz     = document.getElementById('fbiz').value;
-    const pain    = document.getElementById('fpain').value;
+    const painChecked = [...document.querySelectorAll('input[name="pain"]:checked')].map(el => el.value);
+    const pain    = painChecked.join('、');
     const memo    = document.getElementById('fmemo').value.trim();
 
-    if (!name || !biz || !pain) {
-      alert('請填寫必填欄位（姓名、業務類型、主要困擾）');
+    if (!name || !biz || painChecked.length === 0) {
+      alert('請填寫必填欄位（姓名、業務類型，並至少勾選一個困擾）');
       return;
     }
 
