@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 主題色以 CSS 變數注入（由 layout.tsx 從 theme.config.ts 產生），
+   使 Tailwind 的 brand/accent... 皆指向這裡，換色只改 theme.config.ts。 */
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: hsl(var(--color-surface));
+  color: hsl(var(--color-ink));
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
