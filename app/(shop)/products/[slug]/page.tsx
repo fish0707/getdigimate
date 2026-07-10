@@ -8,6 +8,7 @@ import {
   getProductBySlug,
   getProducts,
 } from "@/lib/products/repository";
+import AddToCart from "@/components/AddToCart";
 
 export async function generateStaticParams() {
   const products = await getProducts();
@@ -119,35 +120,7 @@ export default async function ProductPage({
             {product.description}
           </p>
 
-          {product.variants.length > 0 && (
-            <div className="mt-6">
-              <p className="mb-2 text-sm font-semibold text-ink">規格</p>
-              <div className="flex flex-wrap gap-2">
-                {product.variants.map((v) => (
-                  <span
-                    key={v.id}
-                    className={`rounded-lg border px-3 py-1.5 text-sm ${
-                      v.stock === 0
-                        ? "border-border text-muted line-through"
-                        : "border-ink/30 text-ink"
-                    }`}
-                  >
-                    {v.title}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <button
-            disabled={soldOut}
-            className="mt-8 w-full rounded-lg bg-brand px-6 py-3 font-bold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-muted"
-          >
-            {soldOut ? "已售完" : "加入購物車"}
-          </button>
-          <p className="mt-3 text-xs text-muted">
-            * 加入購物車功能於 M2 里程碑實作
-          </p>
+          <AddToCart product={product} />
         </div>
       </div>
     </div>

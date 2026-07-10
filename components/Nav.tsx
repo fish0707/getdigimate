@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { theme } from "@/theme.config";
 import { getCategories } from "@/lib/products/repository";
+import CartBadge from "@/components/CartBadge";
 
 export default async function Nav() {
   const categories = await getCategories();
@@ -31,9 +32,10 @@ export default async function Nav() {
         </div>
         <Link
           href="/cart"
-          className="rounded-lg bg-brand px-4 py-2 text-sm font-bold text-white transition hover:bg-brand-dark"
+          className="flex items-center rounded-lg bg-brand px-4 py-2 text-sm font-bold text-white transition hover:bg-brand-dark"
         >
           購物車
+          <CartBadge />
         </Link>
       </nav>
     </header>
